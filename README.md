@@ -45,10 +45,13 @@
 - [Tampilan](#-tampilan)
 - [Instalasi](#-instalasi)
 - [Cara Menggunakan](#-cara-menggunakan)
+- [Keamanan & Privasi](#️-keamanan--privasi)
 - [Teknologi](#-teknologi)
-- [Build dari Source](#-build-dari-source)
+- [Build dari Source](#️-build-dari-source)
 - [Kontribusi](#-kontribusi)
+- [Roadmap](#-roadmap)
 - [Lisensi](#-lisensi)
+- [Kredit & Apresiasi](#-kredit--apresiasi)
 
 ---
 
