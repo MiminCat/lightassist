@@ -12,7 +12,6 @@
   🌐 Language:
   <a href="README.md">Indonesia</a> |
   <b>English</b> |
-  <a href="README.zh-CN.md">中文</a>
 </p>
 
 <p align="center">
