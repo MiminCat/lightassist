@@ -44,7 +44,7 @@ cukup **1 klik**, sisanya biarkan LightAssist bekerja.
 ## 🎥 Demo Singkat (1 Klik)
 
 <p align="center">
-  <img src="assets/demo.gif" width="200" alt="LightAssist One Click Demo"/>
+  <img src="assets/demo.gif" width="350" alt="LightAssist One Click Demo"/>
 </p>
 
 <p align="center">
