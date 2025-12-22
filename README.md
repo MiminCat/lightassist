@@ -71,7 +71,7 @@ LightAssist **tidak melakukan hal berbahaya**, karena:
 
 ## 📦 Instalasi
 
-1. Unduh **LightAssist Installer**
+1. Unduh <a href="https://github.com/MiminCat/lightassist/releases/download/lightassist/LightAssist-Setup.exe" style="color:blue;">LightAssist Installer</a>
 2. Jalankan installer (tanpa administrator)
 3. LightAssist siap digunakan 🎉
 
