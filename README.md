@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="assets/cat.gif" width="160" alt="kawaii cat"/>
+  <img src="assets/cat.gif" width="180" alt="kawaii cat cleaning"/>
 </p>
 
 <h1 align="center">⚡ LightAssist</h1>
 
 <p align="center">
-  <i>Lightweight & Kawaii Windows Cleaner</i>
+  <i>Minimal • Lightweight • Kawaii Windows Cleaner</i>
 </p>
 
 <p align="center">
@@ -15,46 +15,112 @@
   <a href="README.zh-CN.md">中文</a>
 </p>
 
+<p align="center">
+  ✨ Bersih • Aman • Sekali Klik ✨
+</p>
+
 ---
 
-## 📌 Tentang Aplikasi
+## 🌸 Apa itu LightAssist?
 
-**LightAssist** adalah aplikasi pembersih sampah Windows yang ringan, aman, dan sederhana.  
-Aplikasi ini dirancang untuk membantu pengguna membersihkan file sementara tanpa risiko merusak sistem.
+**LightAssist** adalah aplikasi pembersih sampah Windows yang **ringan, aman, dan tidak ribet**.  
+Tidak ada pengaturan rumit, tidak ada bahasa teknis—  
+cukup **1 klik**, sisanya biarkan LightAssist bekerja.
 
-✔ Tidak memerlukan administrator  
-✔ Tidak menghapus file pribadi  
-✔ Tidak berjalan di background  
 
 ---
 
 ## 🧹 Fitur Utama
 
-- Membersihkan **file sementara pengguna (%TEMP%)**
-- Membersihkan **Windows Temp**
-- Mengosongkan **Recycle Bin**
-- Optimasi RAM ringan
-- Monitoring penggunaan **RAM & Disk**
-- Tombol **One Click Clean**
+✨ **One Click Clean**  
+🗑️ Membersihkan file sampah (%TEMP% & Windows Temp)  
+♻️ Mengosongkan Recycle Bin  
+💾 Optimasi RAM ringan & aman  
+📊 Monitoring RAM & Disk  
+🐱 Tampilan kawaii, tidak membebani sistem  
 
 ---
 
-## 🛡️ Keamanan
+## 🎥 Demo Singkat (1 Klik)
 
-LightAssist **AMAN digunakan** karena:
+<p align="center">
+  <img src="assets/demo.gif" width="650" alt="LightAssist One Click Demo"/>
+</p>
+
+<p align="center">
+  <i>📽️ Tampilan aplikasi & penggunaan One Click Clean</i>
+</p>
+
+💡 **Catatan:**  
+Demo hanya menampilkan **1 tombol utama**, sesuai konsep:
+> *“Clean only when needed.”*
+
+---
+
+## 🛡️ Aman Digunakan
+
+LightAssist **tidak melakukan hal berbahaya**, karena:
+
 - ❌ Tidak mengedit registry
-- ❌ Tidak mengakses data pribadi
+- ❌ Tidak menghapus file pribadi
+- ❌ Tidak berjalan di background
 - ❌ Tidak mengirim data ke internet
 - ✅ Semua proses bersifat lokal
 
+
 ---
 
-## 🎥 Demo Aplikasi
+## 📦 Instalasi
 
-### ▶️ Opsi 1 — GIF (Paling Disarankan)
-Cocok untuk preview langsung di GitHub.
+1. Unduh **LightAssist Installer**
+2. Jalankan installer (tanpa administrator)
+3. LightAssist siap digunakan 🎉
 
-```md
+📍 Shortcut otomatis tersedia di:
+- Start Menu
+- Desktop
+- Taskbar
+
+---
+
+## 🧰 Teknologi yang Digunakan
+
+- Python
+- Tkinter (GUI)
+- PyInstaller
+- Inno Setup
+
+> Fokus utama: **ringan, cepat, dan aman**
+
+---
+
+## 🎨 Filosofi Desain
+
+> *“Aplikasi tidak harus rumit untuk berguna.”*
+
+LightAssist dibuat untuk:
+- Digunakan **sesekali**
+- Tidak memakan RAM
+- Tidak mengganggu sistem
+- Tetap menyenangkan dipandang
+
+
+---
+
+## 🌱 Rencana Pengembangan
+
+- Tema tambahan
+- Bahasa lain
+- Laporan pembersihan lebih detail
+- Lebih banyak kucing 🐾
+
+---
+
+## 🤍 Kredit
+
+Dibuat oleh **MiminCat**  
+Dengan bantuan AI ✨  
+
 <p align="center">
-  <img src="assets/demo.gif" width="600" alt="LightAssist Demo"/>
+  <b>Made with 💖, ☕, and 🐱</b>
 </p>
