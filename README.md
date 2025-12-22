@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/badge/Platform-Windows%2010/11-0078D4?style=flat-square&logo=windows&logoColor=white" alt="Platform"/>
   <img src="https://img.shields.io/badge/Python-3.8+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python"/>
   <img src="https://img.shields.io/badge/License-MIT-00C853?style=flat-square" alt="License"/>
-  <img src="https://img.shields.io/github/v/release/MiminCat/lightassist v1.0?style=flat-square&color=FF6B6B" alt="Release"/>
+  <img src="https://img.shields.io/github/v/release/MiminCat/lightassist?style=flat-square&color=FF6B6B" alt="Release"/>
 </p>
 
 <p>
