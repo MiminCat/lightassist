@@ -249,7 +249,7 @@ psutil>=5.9.0
 
 ---
 
-## 🏗️ Build from Source
+## 🏗️ Build Dari Source
 
 ### Prerequisites
 
