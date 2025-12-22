@@ -19,7 +19,7 @@
   <img src="https://img.shields.io/github/downloads/MiminCat/lightassist/total?style=flat-square&color=00FF88" alt="Downloads"/>
 </p>
 
-**🌐 Language:** [🇮🇩 Indonesia](README.id.md) • [🇺🇸 English](#)
+**🌐 Language:** [🇮🇩 Indonesia](README.md) • [🇺🇸 English](#)
 
 <img src="assets/cat.gif" width="180" alt="Kawaii Cat"/>
 
