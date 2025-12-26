@@ -26,10 +26,10 @@
 **Clean your PC with one click • Safe • Fast • Cute**
 
 <p>
-  <a href="https://github.com/MiminCat/lightassist/releases/download/lightassist/LightAssist-Setup.exe">
+  <a href="https://github.com/MiminCat/lightassist/releases">
     <img src="https://img.shields.io/badge/📥_Download-Installer-00FFF0?style=for-the-badge" alt="Download Installer"/>
   </a>
-  <a href="https://github.com/MiminCat/lightassist/releases/download/lightassist/LightAssist-portable.exe">
+  <a href="https://github.com/MiminCat/lightassist/releases">
     <img src="https://img.shields.io/badge/📦_Download-Portable-FF69B4?style=for-the-badge" alt="Download Portable"/>
   </a>
 </p>
@@ -141,7 +141,7 @@ LightAssist is a Windows system cleaner application designed for **simplicity** 
 
 ### Method 1: Installer (Recommended)
 
-1. Download [**LightAssist-Setup.exe**](https://github.com/MiminCat/lightassist/releases/download/lightassist/LightAssist-Setup.exe)
+1. Download [**LightAssist-Setup.exe**](https://github.com/MiminCat/lightassist/releases)
 2. Run the installer
 3. Follow the installation wizard
 4. Ready to use!
@@ -153,7 +153,7 @@ LightAssist is a Windows system cleaner application designed for **simplicity** 
 
 ### Method 2: Portable
 
-1. Download [**LightAssist-portable.exe**](https://github.com/MiminCat/lightassist/releases/download/lightassist/LightAssist-portable.exe)
+1. Download [**LightAssist-portable.exe**](https://github.com/MiminCat/lightassist/releases)
 2. Save to any folder
 3. Double-click to run
 
