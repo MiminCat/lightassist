@@ -10,6 +10,10 @@ import webbrowser
 import time
 import random
 import sys
+import requests
+import json
+from packaging import version
+import zipfile
 
 myappid = 'LightAssist.Cleaner.App'
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
@@ -31,9 +35,10 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
-
-myappid = 'LightAssist.Cleaner.App'
-ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+# ===== VERSION CONFIG =====
+CURRENT_VERSION = "1.0.1"  # Update ini setiap release
+GITHUB_REPO = "MiminCat/lightassist"  # username/repo
+UPDATE_CHECK_URL = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest"
 
 # ===== CYBER CONFIG =====
 BG = "#0D0D1E"
@@ -83,8 +88,6 @@ app.iconbitmap(resource_path("lightassist.ico"))
 app.title("LightAssist")
 app.geometry("420x580")
 app.configure(bg=BG)
-
-
 app.resizable(False, False)
 
 # ===== STYLE =====
@@ -109,7 +112,7 @@ title = tk.Label(title_frame, text="⚡ LIGHT_ASSIST",
                 font=FONT_TITLE, fg=ACCENT, bg=BG)
 title.pack()
 
-subtitle = tk.Label(header, text="[ mini kawaii cleaner ]", 
+subtitle = tk.Label(header, text=f"[ mini kawaii cleaner v{CURRENT_VERSION} ]", 
                    font=FONT_TINY, fg=SUBTEXT, bg=BG)
 subtitle.pack()
 
@@ -221,6 +224,24 @@ console = scrolledtext.ScrolledText(
 )
 console.pack(padx=8, pady=(0, 8), fill="both", expand=True)
 
+# Input field for update response (hidden by default)
+input_frame = tk.Frame(console_frame, bg="#0A0A15")
+
+input_label = tk.Label(input_frame, text="Your choice:", 
+                      font=FONT_TINY, fg=ACCENT, bg="#0A0A15")
+input_label.pack(side="left", padx=(8, 5))
+
+input_entry = tk.Entry(input_frame, font=FONT_CONSOLE, bg="#1a1a2e", 
+                      fg=TEXT, insertbackground=ACCENT, relief="flat",
+                      bd=0, width=3)
+input_entry.pack(side="left", padx=(0, 5))
+
+input_btn = tk.Button(input_frame, text="OK", font=FONT_TINY,
+                     bg=CARD, fg=ACCENT, activebackground=ACCENT,
+                     activeforeground=BG, relief="flat", bd=0,
+                     padx=15, pady=5, cursor="hand2")
+input_btn.pack(side="left")
+
 # Configure text tags for colors
 console.tag_config("cyan", foreground=ACCENT)
 console.tag_config("pink", foreground=PINK)
@@ -276,16 +297,6 @@ def show_kawaii_welcome():
     ])
     log("", "white")
 
-def typing_effect(text, tag="cyan"):
-    console.config(state="normal")
-    for char in text:
-        console.insert("end", char, tag)
-        console.see("end")
-        app.update()
-        time.sleep(0.02)
-    console.insert("end", "\n")
-    console.config(state="disabled")
-
 def show_credits():
     clear_console()
     
@@ -295,7 +306,7 @@ def show_credits():
     log_colored([
         ("║     ", "cyan"),
         ("⚡ LIGHT ASSIST ", "pink"),
-        ("v1.0      ║", "cyan")
+        (f"v{CURRENT_VERSION}      ║", "cyan")
     ])
     log("║                               ║", "cyan")
     log("╠═══════════════════════════════╣", "cyan")
@@ -330,6 +341,308 @@ def show_credits():
     
     log("╚═══════════════════════════════╝", "cyan")
 
+# ===== UPDATE SYSTEM =====
+update_data = {}
+update_mode_active = False  # Flag untuk cek apakah sedang dalam mode update
+
+def check_for_updates():
+    """Check GitHub for new version"""
+    try:
+        response = requests.get(UPDATE_CHECK_URL, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            latest = data['tag_name'].replace('v', '')
+            
+            if version.parse(latest) > version.parse(CURRENT_VERSION):
+                return {
+                    'available': True,
+                    'version': latest,
+                    'url': data['assets'][0]['browser_download_url'] if data['assets'] else None,
+                    'notes': data['body']
+                }
+    except:
+        pass
+    
+    return {'available': False}
+
+def show_update_notification(update_info):
+    """Show cute update notification in console - NON-BLOCKING"""
+    global update_data
+    update_data = update_info
+    
+    clear_console()
+    
+    # Excited cat
+    log("     /\\_/\\  ", "pink")
+    log("    ( *o* )!! ", "pink")
+    log("     > ^ <", "pink")
+    log("", "white")
+    
+    # Update header
+    log("╔═══════════════════════════════╗", "yellow")
+    log("║   🎉 UPDATE AVAILABLE! 🎉    ║", "yellow")
+    log("╚═══════════════════════════════╝", "yellow")
+    log("", "white")
+    
+    # Version info
+    log_colored([
+        ("  Current: ", "white"),
+        (f"v{CURRENT_VERSION}", "gray"),
+        (" → New: ", "white"),
+        (f"v{update_info['version']}", "cyan"),
+        (" ✨", "yellow")
+    ])
+    log("", "white")
+    
+    # What's new (first 3 lines)
+    if update_info.get('notes'):
+        log("  📝 What's New:", "purple")
+        notes_lines = update_info['notes'].split('\n')[:3]
+        for line in notes_lines:
+            if line.strip():
+                log(f"    • {line.strip()[:40]}", "white")
+    
+    log("", "white")
+    
+    # Sparkles
+    sparkles = "".join([random.choice(SPARKLES) + " " for _ in range(8)])
+    log(f"  {sparkles}", "yellow")
+    log("", "white")
+    
+    # Non-blocking prompt
+    log_colored([
+        ("  💾 ", "cyan"),
+        ("Want to update? Type Y below ⬇", "yellow")
+    ])
+    log_colored([
+        ("  ℹ️  ", "gray"),
+        ("Or just use the app normally - I won't bug you!", "gray")
+    ])
+    log("", "white")
+    
+    # Show input field (but don't disable buttons!)
+    input_frame.pack(padx=8, pady=(0, 8), fill="x")
+    input_entry.delete(0, tk.END)
+    input_entry.focus_set()
+
+def download_with_progress(url, dest_path):
+    """Download file with animated progress"""
+    response = requests.get(url, stream=True)
+    total = int(response.headers.get('content-length', 0))
+    
+    log("", "white")
+    log("  ╔════════════════════════════╗", "cyan")
+    log("  ║   📥 DOWNLOADING UPDATE    ║", "cyan")
+    log("  ╚════════════════════════════╝", "cyan")
+    log("", "white")
+    
+    downloaded = 0
+    block_size = 8192
+    
+    # Create initial progress line
+    log("  [░░░░░░░░░░░░░░░░░░░░] 0% ✨", "cyan")
+    
+    with open(dest_path, 'wb') as f:
+        for chunk in response.iter_content(block_size):
+            if chunk:
+                f.write(chunk)
+                downloaded += len(chunk)
+                percent = int((downloaded / total) * 100)
+                
+                # Animated progress bar
+                filled = int(percent / 5)
+                bar = "█" * filled + "░" * (20 - filled)
+                sparkle = random.choice(SPARKLES)
+                
+                # Update last line instead of deleting
+                console.config(state="normal")
+                # Get current line position
+                last_line_start = console.index("end-2l linestart")
+                last_line_end = console.index("end-2l lineend")
+                # Delete last line
+                console.delete(last_line_start, last_line_end)
+                # Insert new progress
+                console.insert(last_line_start, f"  [{bar}] {percent}% {sparkle}", "cyan")
+                console.see("end")
+                console.config(state="disabled")
+                
+                app.update_idletasks()
+                time.sleep(0.02)
+    
+    log("", "white")
+    log_colored([
+        ("  ✓ ", "green"),
+        ("Download complete! ", "green"),
+        ("🎉", "yellow")
+    ])
+
+def install_update(zip_path):
+    """Install the update"""
+    log("", "white")
+    log("  ╔════════════════════════════╗", "purple")
+    log("  ║   ⚡ INSTALLING UPDATE     ║", "purple")
+    log("  ╚════════════════════════════╝", "purple")
+    log("", "white")
+    
+    # Cute loading animation
+    log("  Installing... (｡♥‿♥｡)", "cyan")
+    
+    for i in range(3):
+        time.sleep(0.5)
+        log(f"  {'.' * (i + 1)}", "cyan")
+    
+    try:
+        # Extract update to temp folder
+        extract_path = os.path.join(tempfile.gettempdir(), "lightassist_update")
+        if os.path.exists(extract_path):
+            shutil.rmtree(extract_path, ignore_errors=True)
+        os.makedirs(extract_path, exist_ok=True)
+        
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(extract_path)
+        
+        # Get current exe path
+        if getattr(sys, 'frozen', False):
+            current_exe = sys.executable
+            current_dir = os.path.dirname(current_exe)
+        else:
+            current_exe = os.path.abspath(__file__)
+            current_dir = os.path.dirname(current_exe)
+        
+        # Create batch file for update
+        batch_script = os.path.join(tempfile.gettempdir(), "lightassist_update.bat")
+        
+        with open(batch_script, 'w') as f:
+            f.write(f"""@echo off
+echo Updating LightAssist...
+timeout /t 2 /nobreak > nul
+
+REM Kill current process
+taskkill /F /IM LightAssist.exe > nul 2>&1
+
+REM Copy new files
+xcopy /s /y /q "{extract_path}\\*.*" "{current_dir}\\" > nul
+
+REM Restart application
+start "" "{current_exe}"
+
+REM Cleanup
+timeout /t 1 /nobreak > nul
+rmdir /s /q "{extract_path}" > nul 2>&1
+del "%~f0"
+""")
+        
+        log("", "white")
+        log_colored([
+            ("  ✓ ", "green"),
+            ("Update ready! Restarting... ", "green"),
+            ("✨", "yellow")
+        ])
+        log("", "white")
+        
+        # Happy cat
+        log("     /\\_/\\  ", "pink")
+        log("    ( ^ω^ ) Bye~!", "pink")
+        log("     > ^ <", "pink")
+        
+        time.sleep(2)
+        
+        # Run update script
+        subprocess.Popen(batch_script, shell=True, creationflags=subprocess.CREATE_NO_WINDOW)
+        app.quit()
+        
+    except Exception as e:
+        log("", "white")
+        log_colored([
+            ("  ✗ ", "red"),
+            (f"Update failed: {str(e)}", "red")
+        ])
+        log("", "white")
+        log("  You can download manually from GitHub", "gray")
+        enable_all_buttons()
+
+def enable_all_buttons():
+    """Re-enable all buttons after update prompt closed"""
+    global update_mode_active
+    update_mode_active = False
+    # Buttons never disabled now, so this just resets the flag
+
+def handle_update_response(response):
+    """Handle Y/N response"""
+    response = response.lower().strip()
+    
+    # Hide input field
+    input_frame.pack_forget()
+    
+    if response == 'y':
+        # Excited response
+        log_colored([
+            ("  ", "white"),
+            ("Yay! ", "pink"),
+            ("(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧", "yellow")
+        ])
+        
+        if update_data.get('url'):
+            def update_thread():
+                try:
+                    zip_path = os.path.join(tempfile.gettempdir(), "lightassist_update.zip")
+                    download_with_progress(update_data['url'], zip_path)
+                    install_update(zip_path)
+                except Exception as e:
+                    log("", "white")
+                    log_colored([
+                        ("  ✗ ", "red"),
+                        (f"Error: {str(e)}", "red")
+                    ])
+                    log("", "white")
+                    log("  (｡•́︿•̀｡) Update failed, but app still works!", "pink")
+            
+            threading.Thread(target=update_thread, daemon=True).start()
+        else:
+            log_colored([
+                ("  ✗ ", "red"),
+                ("No download URL available", "red")
+            ])
+    
+    elif response == 'n' or response == '':
+        log_colored([
+            ("  ", "white"),
+            ("No problem! ", "white"),
+            ("(｡♥‿♥｡)", "pink")
+        ])
+        log("", "white")
+        log("  You can update anytime from 🔄 Update button", "gray")
+        log("", "white")
+    
+    else:
+        log_colored([
+            ("  ", "white"),
+            ("❌ Invalid! Type ", "red"),
+            ("Y", "cyan"),
+            (" to update or just close this", "white")
+        ])
+        log("", "white")
+        # Show input again
+        input_frame.pack(padx=8, pady=(0, 8), fill="x")
+        input_entry.delete(0, tk.END)
+        input_entry.focus_set()
+
+def on_input_submit():
+    """Handle input submission"""
+    response = input_entry.get()
+    handle_update_response(response)
+
+def on_key_press(event):
+    """Handle keyboard input for update prompt"""
+    if event.keysym == "Return":
+        on_input_submit()
+
+# Bind input events
+input_entry.bind("<Return>", on_key_press)
+input_btn.config(command=on_input_submit)
+
+console.bind("<KeyPress>", on_key_press)
+
 # ===== MINI TOOLS =====
 tools = tk.Frame(app, bg=BG)
 tools.pack(padx=15, pady=6, fill="x")
@@ -363,7 +676,7 @@ def get_folder_details(path):
                 if os.path.isfile(item_path):
                     size = os.path.getsize(item_path)
                     total_size += size
-                    if size > 100 * 1024:  # Only show files > 100KB
+                    if size > 100 * 1024:
                         files_info.append((item, size, "file"))
                 elif os.path.isdir(item_path):
                     folder_size = 0
@@ -412,7 +725,6 @@ def clean_temp():
             ])
             continue
         
-        # Scanning animation
         log_colored([
             ("  ⟳ ", "cyan"),
             ("Scanning ", "cyan"),
@@ -421,7 +733,6 @@ def clean_temp():
         ])
         time.sleep(0.3)
         
-        # Get file details
         files_info, folder_size = get_folder_details(folder)
         
         if not files_info:
@@ -432,7 +743,6 @@ def clean_temp():
             log("", "white")
             continue
         
-        # Show top files
         log_colored([
             ("    📂 Found ", "white"),
             (str(len(files_info)), "yellow"),
@@ -441,7 +751,6 @@ def clean_temp():
             (")", "white")
         ])
         
-        # Show sample files
         for item_name, item_size, item_type in sorted(files_info, key=lambda x: x[1], reverse=True)[:3]:
             icon = "📄" if item_type == "file" else "📁"
             log_colored([
@@ -454,7 +763,6 @@ def clean_temp():
         if len(files_info) > 3:
             log(f"      ... and {len(files_info) - 3} more", "gray")
         
-        # Cleaning
         log_colored([
             ("    ⚡ ", "purple"),
             ("Cleaning...", "purple")
@@ -489,7 +797,6 @@ def clean_temp():
         total_del += deleted
         total_size += freed
         
-        # Success message
         log_colored([
             ("    ✓ ", "green"),
             ("Removed ", "green"),
@@ -498,7 +805,6 @@ def clean_temp():
             (format_size(freed), "yellow")
         ])
         
-        # Sparkles
         sparkles = "".join(random.sample(SPARKLES, 3))
         log(f"      {sparkles}", "pink")
         log("", "white")
@@ -554,17 +860,19 @@ def optimize_ram():
 def main_clean():
     def thread():
         try:
+            # If user clicks while update notification is showing, just hide it
+            if input_frame.winfo_ismapped():
+                input_frame.pack_forget()
+            
             main_btn.config(state="disabled", text="⧗ CLEANING...")
             
             clear_console()
             
-            # Header with animation
             log("╔═══════════════════════════════╗", "cyan")
             log("║   🧹 CLEANING IN PROGRESS    ║", "cyan")
             log("╚═══════════════════════════════╝", "cyan")
             log("", "white")
             
-            # Cute cat watching
             log("   /\\_/\\  ", "pink")
             log("  ( •.• ) watching...", "pink")
             log("   > ^ <", "pink")
@@ -574,7 +882,6 @@ def main_clean():
             empty_bin()
             optimize_ram()
             
-            # Success header
             log("", "white")
             sparkle_line = "".join([random.choice(SPARKLES) + " " for _ in range(8)])
             log(sparkle_line, "yellow")
@@ -583,7 +890,6 @@ def main_clean():
             log("╚═══════════════════════════════╝", "green")
             log("", "white")
             
-            # Summary
             mb = round(freed / (1024**2), 1)
             log_colored([
                 ("  📊 ", "white"),
@@ -603,7 +909,6 @@ def main_clean():
             ])
             log("", "white")
             
-            # Happy cat
             log("     /\\_/\\  ", "pink")
             log("    ( ^ω^ ) Done~!", "pink")
             log("     > ^ <", "pink")
@@ -622,6 +927,10 @@ def main_clean():
 
 def ram_only():
     def thread():
+        # Hide update prompt if showing
+        if input_frame.winfo_ismapped():
+            input_frame.pack_forget()
+        
         clear_console()
         log("╔═══════════════════════════════╗", "cyan")
         log("║     💾 RAM OPTIMIZATION      ║", "cyan")
@@ -634,6 +943,10 @@ def ram_only():
     threading.Thread(target=thread, daemon=True).start()
 
 def troubleshoot():
+    # Hide update prompt if showing
+    if input_frame.winfo_ismapped():
+        input_frame.pack_forget()
+    
     try:
         subprocess.Popen("msdt.exe -id DeviceDiagnostic")
         log_colored([
@@ -645,6 +958,10 @@ def troubleshoot():
         pass
 
 def disk_clean():
+    # Hide update prompt if showing
+    if input_frame.winfo_ismapped():
+        input_frame.pack_forget()
+    
     try:
         subprocess.Popen("cleanmgr.exe")
         log_colored([
@@ -654,6 +971,50 @@ def disk_clean():
         ])
     except:
         pass
+
+def manual_update_check():
+    """Manual update check button"""
+    def thread():
+        # If already in update mode, ignore
+        if update_mode_active:
+            return
+        
+        clear_console()
+        log("╔═══════════════════════════════╗", "cyan")
+        log("║   🔍 CHECKING FOR UPDATES    ║", "cyan")
+        log("╚═══════════════════════════════╝", "cyan")
+        log("", "white")
+        
+        # Cute searching animation
+        search_frames = ["(•‿•)", "(◕‿◕)", "(✿◠‿◠)", "(｡♥‿♥｡)"]
+        for i in range(4):
+            console.config(state="normal")
+            console.delete("end-2l", "end-1l")
+            console.config(state="disabled")
+            log_colored([
+                ("  Searching... ", "cyan"),
+                (search_frames[i % len(search_frames)], "pink")
+            ])
+            time.sleep(0.3)
+        
+        log("", "white")
+        
+        update_info = check_for_updates()
+        
+        if update_info['available']:
+            show_update_notification(update_info)
+        else:
+            log_colored([
+                ("  ✓ ", "green"),
+                ("You're using the latest version! ", "green"),
+                ("🎉", "yellow")
+            ])
+            log("", "white")
+            log("     /\\_/\\  ", "pink")
+            log("    ( ^‿^ ) Perfect!", "pink")
+            log("     > ^ <", "pink")
+    
+    threading.Thread(target=thread, daemon=True).start()
 
 # ===== COMMANDS =====
 main_btn.config(command=main_clean)
@@ -688,6 +1049,27 @@ def github_leave(e):
 github_btn.bind("<Enter>", github_enter)
 github_btn.bind("<Leave>", github_leave)
 
+# Update check button
+update_btn = tk.Label(
+    footer_frame,
+    text="🔄 Update",
+    font=FONT_TINY,
+    fg=SUBTEXT,
+    bg=BG,
+    cursor="hand2"
+)
+update_btn.pack(side="left", padx=4)
+
+update_btn.bind("<Button-1>", lambda e: manual_update_check())
+
+def update_enter(e):
+    update_btn.config(fg=ACCENT)
+def update_leave(e):
+    update_btn.config(fg=SUBTEXT)
+
+update_btn.bind("<Enter>", update_enter)
+update_btn.bind("<Leave>", update_leave)
+
 credits_btn = tk.Label(
     footer_frame,
     text="ⓘ Credits",
@@ -708,8 +1090,20 @@ def credits_leave(e):
 credits_btn.bind("<Enter>", credits_enter)
 credits_btn.bind("<Leave>", credits_leave)
 
-tk.Label(footer_frame, text="| v1.0", font=FONT_TINY,
+tk.Label(footer_frame, text=f"| v{CURRENT_VERSION}", font=FONT_TINY,
         fg=SUBTEXT, bg=BG).pack(side="left")
+
+# ===== AUTO UPDATE CHECK ON STARTUP =====
+def startup_update_check():
+    """Check for updates on startup (silent)"""
+    try:
+        update_info = check_for_updates()
+        if update_info['available']:
+            # Wait a bit before showing notification
+            time.sleep(2)
+            show_update_notification(update_info)
+    except:
+        pass
 
 # ===== INIT =====
 show_kawaii_welcome()
@@ -720,6 +1114,9 @@ def auto_update():
     app.after(3000, auto_update)
 
 auto_update()
+
+# Start update check in background
+threading.Thread(target=startup_update_check, daemon=True).start()
 
 # ===== RUN =====
 app.mainloop()
