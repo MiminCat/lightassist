@@ -26,10 +26,10 @@
 **Bersihkan PC dengan satu klik • Aman • Cepat • Lucu**
 
 <p>
-  <a href="https://github.com/MiminCat/lightassist/releases/download/lightassist/LightAssist-Setup.exe">
+  <a href="https://github.com/MiminCat/lightassist/releases">
     <img src="https://img.shields.io/badge/📥_Download-Installer-00FFF0?style=for-the-badge" alt="Download Installer"/>
   </a>
-  <a href="https://github.com/MiminCat/lightassist/releases/download/lightassist/LightAssist-portable.exe">
+  <a href="https://github.com/MiminCat/lightassist/releases">
     <img src="https://img.shields.io/badge/📦_Download-Portable-FF69B4?style=for-the-badge" alt="Download Portable"/>
   </a>
 </p>
