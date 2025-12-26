@@ -141,7 +141,7 @@ LightAssist adalah aplikasi pembersih sistem Windows yang dirancang untuk **kese
 
 ### Metode 1: Installer (Recommended)
 
-1. Download [**LightAssist-Setup.exe**](https://github.com/MiminCat/lightassist/releases/download/lightassist/LightAssist-Setup.exe)
+1. Download [**LightAssist-Setup.exe**](https://github.com/MiminCat/lightassist/releases)
 2. Jalankan installer
 3. Ikuti wizard instalasi
 4. Aplikasi siap digunakan!
@@ -153,7 +153,7 @@ LightAssist adalah aplikasi pembersih sistem Windows yang dirancang untuk **kese
 
 ### Metode 2: Portable
 
-1. Download [**LightAssist-portable.exe**](https://github.com/MiminCat/lightassist/releases/download/lightassist/LightAssist-portable.exe)
+1. Download [**LightAssist-portable.exe**](https://github.com/MiminCat/lightassist/releases)
 2. Simpan di folder manapun
 3. Double-click untuk menjalankan
 
